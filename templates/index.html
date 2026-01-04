@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-Tac-Toe: Arena of the Gods</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Mode Selection Screen -->
+      <div id="mode-screen" class="screen active">
+        <div class="epic-header">
+          <h1 class="epic-title">Tic-Tac-Toe</h1>
+          <p class="epic-subtitle">⚔️ Enter the Arena of the Gods ⚔️</p>
+        </div>
+        <div class="setup-card">
+          <p class="subtitle">Choose your game mode</p>
+
+          <div class="mode-selection">
+            <button
+              class="mode-btn"
+              data-mode="pvp"
+              onclick="selectMode('pvp')"
+            >
+              <span class="mode-icon">👥</span>
+              <span class="mode-title">Human vs Human</span>
+              <span class="mode-desc">Play with a friend</span>
+            </button>
+            <button
+              class="mode-btn"
+              data-mode="pva"
+              onclick="selectMode('pva')"
+            >
+              <span class="mode-icon">🤖</span>
+              <span class="mode-title">Human vs AI</span>
+              <span class="mode-desc">Challenge the gods</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player Setup Screen (PvP) -->
+      <div id="pvp-screen" class="screen">
+        <div class="setup-card">
+          <h1 class="title">Human vs Human</h1>
+          <p class="subtitle">Enter player names</p>
+
+          <div class="setup-form">
+            <div class="input-group">
+              <label for="player1-name">Player 1 (X)</label>
+              <input
+                type="text"
+                id="player1-name"
+                placeholder="Enter name..."
+                maxlength="15"
+              />
+            </div>
+            <div class="input-group">
+              <label for="player2-name">Player 2 (O)</label>
+              <input
+                type="text"
+                id="player2-name"
+                placeholder="Enter name..."
+                maxlength="15"
+              />
+            </div>
+            <div class="setup-buttons">
+              <button class="back-setup-btn" onclick="goBackToMode()">
+                ← Back
+              </button>
+              <button class="start-btn" onclick="startGame('pvp')">
+                Start Game
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Setup Screen (PvA) -->
+      <div id="pva-screen" class="screen">
+        <div class="setup-card">
+          <h1 class="title">Human vs AI</h1>
+          <p class="subtitle">Challenge the gods</p>
+          <p class="mortal-warning">⚠️ Be careful what you wish for, mortal!</p>
+
+          <div class="setup-form">
+            <div class="input-group">
+              <label for="player-name-ai">Your Name</label>
+              <input
+                type="text"
+                id="player-name-ai"
+                placeholder="Enter name..."
+                maxlength="15"
+              />
+            </div>
+            <h3 class="ai-section-title">Choose Your Opponent</h3>
+            <div class="ai-selection">
+              <button class="ai-btn" data-ai="hermes">
+                <span class="ai-icon">⚡</span>
+                <span class="ai-name">Hermes</span>
+                <span class="ai-difficulty">Easy</span>
+              </button>
+              <button class="ai-btn selected" data-ai="zeus">
+                <span class="ai-icon">👑</span>
+                <span class="ai-name">Zeus</span>
+                <span class="ai-difficulty">Medium</span>
+              </button>
+              <button class="ai-btn" data-ai="athena">
+                <span class="ai-icon">🦉</span>
+                <span class="ai-name">Athena</span>
+                <span class="ai-difficulty">Hard</span>
+              </button>
+            </div>
+            <div class="setup-buttons">
+              <button class="back-setup-btn" onclick="goBackToMode()">
+                ← Back
+              </button>
+              <button class="start-btn" onclick="startGame('pva')">
+                Start Game
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Screen -->
+      <div id="game-screen" class="screen">
+        <div class="game-layout">
+          <!-- Left Section - Game Board -->
+          <div class="left-section">
+            <!-- Player Info Cards -->
+            <div class="section-card players-info">
+              <div class="player-card player1-card" id="player1-card">
+                <div class="player-symbol">X</div>
+                <div class="player-details">
+                  <span class="player-label">Player 1</span>
+                  <span class="player-name" id="display-player1">Player 1</span>
+                </div>
+                <div class="player-score" id="player1-score">0</div>
+              </div>
+              <div class="vs-divider">
+                <span>VS</span>
+              </div>
+              <div class="player-card player2-card" id="player2-card">
+                <div class="player-symbol">O</div>
+                <div class="player-details">
+                  <span class="player-label">Player 2</span>
+                  <span class="player-name" id="display-player2">Player 2</span>
+                </div>
+                <div class="player-score" id="player2-score">0</div>
+              </div>
+            </div>
+
+            <!-- Turn Indicator -->
+            <div class="section-card turn-indicator" id="turn-indicator">
+              <div class="turn-label" id="turn-label">
+                Player 1's Turn <span class="turn-symbol x">X</span>
+              </div>
+              <div class="thinking-display" id="thinking-display">
+                <span class="thinking-spinner" id="thinking-spinner">⟳</span>
+                <span class="thinking-text" id="thinking-text"
+                  >Player 1 is thinking...</span
+                >
+              </div>
+            </div>
+
+            <!-- Game Board -->
+            <div class="section-card board-section">
+              <div class="board" id="board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+              </div>
+            </div>
+
+            <!-- Back Button -->
+            <button class="back-btn" onclick="goToSetup()">
+              ← Back to Menu
+            </button>
+          </div>
+
+          <!-- Right Section - Moves History -->
+          <div class="right-section">
+            <div class="history-header">
+              <h2>Moves History</h2>
+              <span class="move-count" id="move-count">0 moves</span>
+            </div>
+            <div class="history-list" id="history-list">
+              <div class="history-empty">No moves yet</div>
+            </div>
+            <div class="draws-count">
+              <span>Draws: <strong id="draws-count">0</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Win Modal -->
+      <div id="win-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-icon" id="modal-icon">🏆</div>
+          <h2 id="modal-title">Victory!</h2>
+          <p id="modal-message">Player wins!</p>
+          <button class="play-again-btn" onclick="playAgain()">
+            Play Again
+          </button>
+          <button class="menu-btn" onclick="goToSetup()">Back to Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
