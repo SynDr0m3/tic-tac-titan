@@ -1090,17 +1090,72 @@ body::after {
     flex-direction: column;
   }
 
+  /* Compact players info - side by side on mobile */
   .players-info {
-    flex-direction: column;
-    gap: 12px;
+    flex-direction: row;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
   }
 
   .player-card {
-    width: 100%;
+    flex: 0 1 auto;
+    padding: 8px 10px;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .player-symbol {
+    font-size: 1.2rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .player-details {
+    display: none;
+  }
+
+  .player-score {
+    font-size: 1.1rem;
+    flex-shrink: 0;
   }
 
   .vs-divider {
     transform: none;
+    flex-shrink: 0;
+  }
+
+  .vs-divider span {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  /* Compact moves history - starts small, grows with content */
+  .right-section {
+    max-height: none;
+    padding: 16px;
+  }
+
+  .history-list {
+    min-height: 60px;
+    max-height: 150px;
+    flex: 0 1 auto;
+  }
+
+  .history-header {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .history-header h2 {
+    font-size: 0.95rem;
+  }
+
+  .history-item {
+    padding: 8px 10px;
+    margin-bottom: 6px;
   }
 
   .cell {
