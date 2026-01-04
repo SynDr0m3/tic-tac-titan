@@ -1053,7 +1053,8 @@ body::after {
   }
 
   .right-section {
-    max-height: 300px;
+    height: auto !important;
+    max-height: none !important;
   }
 
   .cell {
@@ -1109,7 +1110,7 @@ body::after {
   .player-card {
     flex: 0 1 auto;
     padding: 8px 10px;
-    gap: 6px;
+    gap: 12px;
     min-width: 0;
   }
 
